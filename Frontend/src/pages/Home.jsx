@@ -1,29 +1,30 @@
 import { useState, useEffect } from 'react';
-import { link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; 
 
-export default function Home(){
-    const [Courses,setCourses] = useState([]);
-    const [Loading, setLoading] = useState(true);
-    const [Error,setError] = useState(null);
+export default function Home() {
+    
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    useEffect(()=>{
+    useEffect(() => {
         fetch('http://localhost:3000/api/v1/course/preview')
-        .then((response)=>{
-            if(!response.ok) throw new Error("Failed to fetch courses");
-            return response.json;
+        .then((response) => {
+            if (!response.ok) throw new Error("Failed to fetch courses");
+            return response.json(); 
         })
-        .then((data)=>{
-            setCourses(data.Courses);
+        .then((data) => {
+            setCourses(data.courses || []);
             setLoading(false);
         })
-        .catch((err)=>{
+        .catch((err) => {
             setError(err.message);
             setLoading(false);
         });
-    },[]);
+    }, []);
 
-    if (Loading) return <div>Loading Courses .....</div>
-    if(Error) return <div> Error :{Error}</div>
+    if (loading) return <div>Loading Courses .....</div>;
+    if (error) return <div> Error: {error}</div>;
 
     return (
         <div>
@@ -39,7 +40,6 @@ export default function Home(){
                             <p>{course.description}</p>
                             <p><strong>Price:</strong> ${course.price}</p>
                             
-                            {/* Navigates to the details page for this specific course */}
                             <Link to={`/course/${course._id}`}>
                                 <button>View Details</button>
                             </Link>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate,link } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 
 export default function signin(){
     const [Email,setEmail] = useState('');
@@ -15,7 +15,7 @@ export default function signin(){
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ Email, Password })
             });
 
             const data = await response.json();
@@ -38,11 +38,11 @@ export default function signin(){
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Email: </label>
-                    <input type="email" value={email} onChange={(e)=> setEmail(e.target.value)} required/>
+                    <input type="email" value={Email} onChange={(e)=> setEmail(e.target.value)} required/>
                 </div>
                 <div>
                     <label> Password: </label>
-                    <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} required/>
+                    <input type="password" value={Password} onChange={(e)=>setPassword(e.target.value)} required/>
                 </div>
                 <button type="submit">Log in</button>
             </form>

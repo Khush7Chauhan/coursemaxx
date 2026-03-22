@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-export default function createCourse() {
+export default function CreateCourse() {
     const [formData, setFormData] = useState({
         title: '',
         description: '',

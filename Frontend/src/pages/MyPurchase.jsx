@@ -1,52 +1,54 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-export default function myPurchase(){
-    const [Purchases, setPurchases ] = useState('');
-    const [Loading, setLoading ] = useState('true');
-    const [Error, setError] = useState('null');
+
+export default function MyPurchases() {
+    const [purchasedCourses, setPurchasedCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(()=>{
+    useEffect(() => {
         const token = localStorage.getItem('token');
-        if(!token){
+        if (!token) {
             navigate('/signin');
             return;
         }
+        
         fetch('http://localhost:3000/api/v1/user/purchases', {
             method: 'GET',
             headers: {
-                'token': token 
+                'Authorization': `Bearer ${token}` 
             }
         })
-        .then((response)=>{
-            if(!response.ok) {
-                if(response.status === 403){
+        .then((response) => {
+            if (!response.ok) {
+                if (response.status === 403) {
                     localStorage.removeItem('token');
                     navigate('/signin');
-                    throw new Error ("Session expired, Please Log in again")
+                    throw new Error("Session expired. Please log in again.");
                 }
                 throw new Error("Failed to fetch purchases");
             }
-            return response.json()
+            return response.json();
         })
-        .then((data)=>{
+        .then((data) => {
             setPurchasedCourses(data.coursesData);
-            setLoading(false);
+            setLoading(false); 
         })
-        .catch((err)=>{
+        .catch((err) => {
             setError(err.message);
-            setLoading("false");
+            setLoading(false); 
         });    
-    },[navigate]);
+    }, [navigate]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         navigate('/signin');
     };
 
-    if (Loading) return <div>Loading your dashboard...</div>;
-    if (Error) return <div>Error: {error}</div>;
+    if (loading) return <div>Loading your dashboard...</div>;
+    if (error) return <div>Error: {error}</div>; 
 
     return (
         <div>
@@ -69,7 +71,6 @@ export default function myPurchase(){
                                 <h2>{course.title}</h2>
                                 <p>{course.description}</p>
                                 <button>Start Learning</button> 
-                                {/* ^ Placeholder button for when you add video content! */}
                             </div>
                         ))}
                     </div>
@@ -77,4 +78,4 @@ export default function myPurchase(){
             </div>
         </div>
     );
-};
+}
